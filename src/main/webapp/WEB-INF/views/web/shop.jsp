@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dinh Chuong
@@ -12,7 +13,9 @@
   </head>
   <body>
 
-
+  <c:forEach items="${products}" var="item">
+      <li>${item.name}</li>
+  </c:forEach>
 
 
 

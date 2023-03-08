@@ -1,38 +1,25 @@
-package com.athttt.entity;
+package com.athttt.dto;
+
+import com.athttt.entity.ProductEntity;
 
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "product")
-public class ProductEntity extends BaseEntity{
-    @Column(name = "name")
+public class ProductDTO extends AbstractDTO<ProductEntity> {
     private String name;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "status")
     private Boolean status;
 
-    @Column(name = "price")
     private Float price;
 
-    @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "supplier")
     private String supplier;
 
-    @Column(name = "category_id")
     private Integer categoryId;
 
-    @Column(name = "thumbnail")
     private String thumbnail;
-
-
-
-
 
     public String getName() {
         return name;

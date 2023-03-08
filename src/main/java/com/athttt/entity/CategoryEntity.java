@@ -1,8 +1,8 @@
 package com.athttt.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -10,7 +10,8 @@ import javax.persistence.Table;
 public class CategoryEntity extends BaseEntity{
     @Column(name = "name")
     private String name;
-
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    private List<ProductEntity> products;
     public String getName() {
         return name;
     }
@@ -18,4 +19,6 @@ public class CategoryEntity extends BaseEntity{
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

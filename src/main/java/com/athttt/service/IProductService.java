@@ -8,4 +8,6 @@ import java.util.Map;
 public interface IProductService {
 
     List<ProductDTO> getProducts (Map<String, Object> searchMap, Integer page);
+
+    Long count();
 }

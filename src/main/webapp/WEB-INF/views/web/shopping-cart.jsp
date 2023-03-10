@@ -245,6 +245,53 @@
 </div>
 <!-- Search End -->
 
+    <script type="module" src="web/js/cart.js"></script>
+    <script>
+      const cart = {
+        addToCart(id) {
+          console.log(1)
+          let listItem = JSON.parse(localStorage.getItem("listItem")) || []
+          if (listItem.filter(item => item.id == id).length == 0){
+            listItem.push({id, quantity: 1})
+          }
+          else
+          {
+            listItem.forEach(item => {
+              if (item.id == id) {
+                item.quantity+=1;
+              }
+            })
+          }
+          localStorage.setItem("listItem", JSON.stringify(listItem));
+        },
 
+        fetchMyCart() {
+          let myCart = JSON.parse(localStorage.getItem("list")) || [];
+          console.log("myCart.length == 0")
+
+          //if (myCart.length == 0) return [];
+          console.log("myCart.length != 0")
+          fetch("http://localhost:8080/my-cart-info", {
+            method: "post",
+            body: {
+              carts: JSON.stringify(myCart)
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(res => {
+            console.log(res)
+            return res.json()
+          })
+            .then(data => {
+              console.log(data);
+            })
+        }
+      }
+      window.onload = function () {
+        cart.fetchMyCart()
+        console.log(1)
+      };
+    </script>
 </body>
 </html>

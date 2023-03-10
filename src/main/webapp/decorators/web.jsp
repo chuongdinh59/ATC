@@ -11,7 +11,7 @@
 		  rel="stylesheet">
 	<!-- Bootstrap core CSS -->
 	<link href="web/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<%--	<!-- Custom styles for this template -->--%>
+	<!-- Custom styles for this template -->
 	<link href="web/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="web/css/elegant-icons.css" rel="stylesheet" type="text/css">
 	<link href="web/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -20,6 +20,8 @@
 	<link href="web/css/owl.carousel.min.css" rel="stylesheet" type="text/css">
 	<link href="web/css/slicknav.min.css" rel="stylesheet" type="text/css">
 	<link href="web/css/style.css" rel="stylesheet" type="text/css">
+
+
 
 </head>
 <body>
@@ -41,7 +43,7 @@
 	<script src="web/js/mixitup.min.js"></script>
 	<script src="web/js/jquery.slicknav.js"></script>
 	<script src="web/js/jquery.nice-select.min.js"></script>
-	<script src="web/js/jquery.nicescroll.min.js.min.js"></script>
+	<script src="web/js/jquery.nicescroll.min.js"></script>
 	<script src="web/js/main.js"></script>
 
 

@@ -10,10 +10,18 @@
 <div class="offcanvas-menu-overlay"></div>
 <div class="offcanvas-menu-wrapper">
 	<div class="offcanvas__option">
-		<div class="offcanvas__links">
-			<a href="#">Sign in</a>
-			<a href="#">FAQs</a>
-		</div>
+<%--		<div class="offcanvas__links">--%>
+<%--			<a href="#">Sign in</a>--%>
+<%--			<a href="#">FAQs</a>--%>
+<%--		</div>--%>
+		<security:authorize access = "isAnonymous()">
+			<li class="nav-item"><a class="nav-link" href="<c:url value='/login'/>">Đăng nhập</a></li>
+			<li class="nav-item"><a class="nav-link" href="#">Đăng ký</a></li>
+		</security:authorize>
+		<security:authorize access = "isAuthenticated()">
+			<li class="nav-item"><a class="nav-link" href="#">Wellcome <%=SecurityUtils.getPrincipal().getFullName()%></a></li>
+			<li class="nav-item"><a class="nav-link" href="<c:url value='/logout'/>">Thoát</a></li>
+		</security:authorize>
 		<div class="offcanvas__top__hover">
 			<span>Usd <i class="arrow_carrot-down"></i></span>
 			<ul>
@@ -48,16 +56,14 @@
 				<div class="col-lg-6 col-md-5">
 					<div class="header__top__right">
 						<div class="header__top__links">
-							<a href="#">Sign in</a>
-							<a href="#">FAQs</a>
-						</div>
-						<div class="header__top__hover">
-							<span>Usd <i class="arrow_carrot-down"></i></span>
-							<ul>
-								<li>USD</li>
-								<li>EUR</li>
-								<li>USD</li>
-							</ul>
+							<security:authorize access = "isAnonymous()">
+								<a href="#">Sign in</a>
+								<a href="#">FAQs</a>
+							</security:authorize>
+							<security:authorize access = "isAuthenticated()">
+								<a href="#">Wellcome <%=SecurityUtils.getPrincipal().getFullName()%></a>
+								<a href="<c:url value='/logout'/>">Thoát</a>
+							</security:authorize>
 						</div>
 					</div>
 				</div>
@@ -75,7 +81,7 @@
 				<nav class="header__menu mobile-menu">
 					<ul>
 						<li class="active"><a href="/">Home</a></li>
-						<li><a href="/">Shop</a></li>
+						<li><a href="/shop">Shop</a></li>
 						<li><a href="#">Pages</a>
 							<ul class="dropdown">
 								<li><a href="/">About Us</a></li>

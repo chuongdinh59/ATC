@@ -239,12 +239,16 @@
                                   </div>
                                   <div class="product__item__text">
                                       <h6>${p.name}</h6>
-                                      <security:authorize access = "isAnonymous()">
-                                          <a style="cursor: pointer"  href="/login" class="add-cart">+ Add To Cart</a>
-                                      </security:authorize>
-                                      <security:authorize access = "isAuthenticated()">
-                                          <a style="cursor: pointer" onclick="cart.addToCart(${p.id})" class="add-cart">+ Add To Cart</a>
-                                      </security:authorize>
+<%--                                      <security:authorize access = "isAnonymous()">--%>
+<%--                                          <a style="cursor: pointer"  href="/login" class="add-cart">+ Add To Cart</a>--%>
+<%--                                      </security:authorize>--%>
+<%--                                      <security:authorize access = "isAuthenticated()">--%>
+                                          <a style="cursor: pointer" class="add-cart"
+                                             onclick="cart.addToCart(${p.id}, '${p.name}', ${p.price}, '${p.thumbnail}')"
+                                          >
+                                              + Add To Cart
+                                          </a>
+<%--                                      </security:authorize>--%>
                                       <div class="rating">
                                           <i class="fa fa-star-o"></i>
                                           <i class="fa fa-star-o"></i>
@@ -371,37 +375,28 @@
 
     <script>
         const cart = {
-            addToCart(id) {
-                console.log(1)
+
+            addToCart(id,name, price, thumbnail ) {
                 let listItem = JSON.parse(localStorage.getItem("listItem")) || []
-                if (listItem.filter(item => item.id == id).length == 0){
-                    listItem.push({id, quantity: 1})
+                const totalQuantity = listItem.reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue.quantity;
+                }, 0);
+
+                if (listItem.filter(item => item.product.id == id).length == 0){
+                    listItem.push({product: {id, name, price, thumbnail} , quantity: 1})
                 }
                 else
                 {
                     listItem.forEach(item => {
-                        if (item.id == id) {
+                        if (item.product.id == id) {
                             item.quantity+=1;
                         }
                     })
                 }
+                const numberItem = listItem.length
+                const numberDOM = document.querySelector(".header__nav__option .number").innerHTML = totalQuantity + 1;
                 localStorage.setItem("listItem", JSON.stringify(listItem));
-            },
-
-            fetchMyCart() {
-                let myCart = JSON.parse(localStorage.getItem("list")) || [];
-                if (myCart.length == 0) return [];
-                fetch("http://localhost:8080/my-cart", {
-                    method: "post",
-                    body: {
-                        cart:JSON.stringify(myCart)
-                    },
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
             }
-
         }
     </script>
   </body>

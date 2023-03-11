@@ -242,6 +242,8 @@
 </div>
 <!-- Search End -->
 
+<script>
 
+</script>
 </body>
 </html>

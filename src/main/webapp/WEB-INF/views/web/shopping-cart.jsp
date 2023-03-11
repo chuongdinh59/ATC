@@ -48,87 +48,9 @@
               <th></th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-              <td class="product__cart__item">
-                <div class="product__cart__item__pic">
-                  <img src="img/shopping-cart/cart-1.jpg" alt="">
-                </div>
-                <div class="product__cart__item__text">
-                  <h6>T-shirt Contrast Pocket</h6>
-                  <h5>$98.49</h5>
-                </div>
-              </td>
-              <td class="quantity__item">
-                <div class="quantity">
-                  <div class="pro-qty-2">
-                    <input type="text" value="1">
-                  </div>
-                </div>
-              </td>
-              <td class="cart__price">$ 30.00</td>
-              <td class="cart__close"><i class="fa fa-close"></i></td>
-            </tr>
-            <tr>
-              <td class="product__cart__item">
-                <div class="product__cart__item__pic">
-                  <img src="img/shopping-cart/cart-2.jpg" alt="">
-                </div>
-                <div class="product__cart__item__text">
-                  <h6>Diagonal Textured Cap</h6>
-                  <h5>$98.49</h5>
-                </div>
-              </td>
-              <td class="quantity__item">
-                <div class="quantity">
-                  <div class="pro-qty-2">
-                    <input type="text" value="1">
-                  </div>
-                </div>
-              </td>
-              <td class="cart__price">$ 32.50</td>
-              <td class="cart__close"><i class="fa fa-close"></i></td>
-            </tr>
-            <tr>
-              <td class="product__cart__item">
-                <div class="product__cart__item__pic">
-                  <img src="img/shopping-cart/cart-3.jpg" alt="">
-                </div>
-                <div class="product__cart__item__text">
-                  <h6>Basic Flowing Scarf</h6>
-                  <h5>$98.49</h5>
-                </div>
-              </td>
-              <td class="quantity__item">
-                <div class="quantity">
-                  <div class="pro-qty-2">
-                    <input type="text" value="1">
-                  </div>
-                </div>
-              </td>
-              <td class="cart__price">$ 47.00</td>
-              <td class="cart__close"><i class="fa fa-close"></i></td>
-            </tr>
-            <tr>
-              <td class="product__cart__item">
-                <div class="product__cart__item__pic">
-                  <img src="img/shopping-cart/cart-4.jpg" alt="">
-                </div>
-                <div class="product__cart__item__text">
-                  <h6>Basic Flowing Scarf</h6>
-                  <h5>$98.49</h5>
-                </div>
-              </td>
-              <td class="quantity__item">
-                <div class="quantity">
-                  <div class="pro-qty-2">
-                    <input type="text" value="1">
-                  </div>
-                </div>
-              </td>
-              <td class="cart__price">$ 30.00</td>
-              <td class="cart__close"><i class="fa fa-close"></i></td>
-            </tr>
+            <tbody class="tbody-shopping">
+
+
             </tbody>
           </table>
         </div>
@@ -245,53 +167,82 @@
 </div>
 <!-- Search End -->
 
-    <script type="module" src="web/js/cart.js"></script>
     <script>
-      const cart = {
-        addToCart(id) {
-          console.log(1)
-          let listItem = JSON.parse(localStorage.getItem("listItem")) || []
-          if (listItem.filter(item => item.id == id).length == 0){
-            listItem.push({id, quantity: 1})
-          }
-          else
-          {
-            listItem.forEach(item => {
-              if (item.id == id) {
-                item.quantity+=1;
-              }
-            })
-          }
-          localStorage.setItem("listItem", JSON.stringify(listItem));
-        },
-
-        fetchMyCart() {
-          let myCart = JSON.parse(localStorage.getItem("list")) || [];
-          console.log("myCart.length == 0")
-
-          //if (myCart.length == 0) return [];
-          console.log("myCart.length != 0")
-          fetch("http://localhost:8080/my-cart-info", {
-            method: "post",
-            body: {
-              carts: JSON.stringify(myCart)
-            },
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }).then(res => {
-            console.log(res)
-            return res.json()
-          })
-            .then(data => {
-              console.log(data);
-            })
+      document.addEventListener("DOMContentLoaded", function() {
+        let listItem = JSON.parse(localStorage.getItem("listItem")) || []
+        let body = document.querySelector(".tbody-shopping")
+        let HTML = ``
+        for (let item of listItem) {
+          HTML += "<tr>" +
+                  "<td class='product__cart__item'>" +
+                  "<div class='product__cart__item__pic'>" +
+                  "<img style='width: 100px;height:100px ;object-fit: contain' src='" + item.product.thumbnail + "' alt=''>" +
+                  "</div>" +
+                  "<div class='product__cart__item__text'>" +
+                  "<h6>" + item.product.name + "</h6>" +
+                  "<h5>$98.49</h5>" +
+                  "</div>" +
+                  "</td>" +
+                  "<td class='quantity__item'>" +
+                  "<div class='quantity'>" +
+                  "<div class='pro-qty-2'>" +
+                  "<input type='text' value='" + item.quantity + "'>" +
+                  "</div>" +
+                  "</div>" +
+                  "</td>" +
+                  "<td class='cart__price'>" + item.product.price + "</td>" +
+                  "<td class='cart__close'><i class='fa fa-close'></i></td>" +
+                  "</tr>";
         }
-      }
-      window.onload = function () {
-        cart.fetchMyCart()
-        console.log(1)
-      };
+        body.innerHTML = HTML
+      });
     </script>
+<%--    <script>--%>
+<%--      const cart = {--%>
+<%--        addToCart(id) {--%>
+<%--          console.log(1)--%>
+<%--          let listItem = JSON.parse(localStorage.getItem("listItem")) || []--%>
+<%--          if (listItem.filter(item => item.id == id).length == 0){--%>
+<%--            listItem.push({id, quantity: 1})--%>
+<%--          }--%>
+<%--          else--%>
+<%--          {--%>
+<%--            listItem.forEach(item => {--%>
+<%--              if (item.id == id) {--%>
+<%--                item.quantity+=1;--%>
+<%--              }--%>
+<%--            })--%>
+<%--          }--%>
+<%--          localStorage.setItem("listItem", JSON.stringify(listItem));--%>
+<%--        },--%>
+
+<%--        fetchMyCart() {--%>
+<%--          let myCart = JSON.parse(localStorage.getItem("list")) || [];--%>
+<%--          console.log("myCart.length == 0")--%>
+
+<%--          //if (myCart.length == 0) return [];--%>
+<%--          console.log("myCart.length != 0")--%>
+<%--          fetch("http://localhost:8080/my-cart-info", {--%>
+<%--            method: "post",--%>
+<%--            body: {--%>
+<%--              carts: JSON.stringify(myCart)--%>
+<%--            },--%>
+<%--            headers: {--%>
+<%--              'Content-Type': 'application/json'--%>
+<%--            }--%>
+<%--          }).then(res => {--%>
+<%--            console.log(res)--%>
+<%--            return res.json()--%>
+<%--          })--%>
+<%--            .then(data => {--%>
+<%--              console.log(data);--%>
+<%--            })--%>
+<%--        }--%>
+<%--      }--%>
+<%--      window.onload = function () {--%>
+<%--        cart.fetchMyCart()--%>
+<%--        console.log(1)--%>
+<%--      };--%>
+<%--    </script>--%>
 </body>
 </html>

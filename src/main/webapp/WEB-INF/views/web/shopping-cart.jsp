@@ -57,14 +57,14 @@
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="continue__btn">
-              <a href="#">Continue Shopping</a>
+              <a href="/shop">Continue Shopping</a>
             </div>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="continue__btn update__btn">
-              <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
-            </div>
-          </div>
+<%--          <div class="col-lg-6 col-md-6 col-sm-6">--%>
+<%--            <div class="continue__btn update__btn">--%>
+<%--              <a href="#"><i class="fa fa-spinner"></i> Update cart</a>--%>
+<%--            </div>--%>
+<%--          </div>--%>
         </div>
       </div>
       <div class="col-lg-4">
@@ -78,10 +78,10 @@
         <div class="cart__total">
           <h6>Cart total</h6>
           <ul>
-            <li>Subtotal <span>$ 169.50</span></li>
-            <li>Total <span>$ 169.50</span></li>
+            <li>Subtotal <span>$ 0</span></li>
+            <li>Total <span>$ 0</span></li>
           </ul>
-          <a href="#" class="primary-btn">Proceed to checkout</a>
+          <a href="/checkout" class="primary-btn">Proceed to checkout</a>
         </div>
       </div>
     </div>
@@ -180,22 +180,115 @@
                   "</div>" +
                   "<div class='product__cart__item__text'>" +
                   "<h6>" + item.product.name + "</h6>" +
-                  "<h5>$98.49</h5>" +
+                  "<h5>$" + item.product.price + "</h5>" +
                   "</div>" +
                   "</td>" +
                   "<td class='quantity__item'>" +
-                  "<div class='quantity'>" +
-                  "<div class='pro-qty-2'>" +
-                  "<input type='text' value='" + item.quantity + "'>" +
+                  "<div class='quantity' >" +
+                  "<div class='pro-qty-2' style='display: flex; gap: 10px' >" +
+                  "<span class='fa fa-angle-left dec qtybtn' onclick='cart.decreaseItem(event," + item.product.id + ", " +  item.product.price + ")'> </span>" +
+                  "<input readonly type='text'  value='" + item.quantity + "'>" +
+                  "<span class='fa fa-angle-right inc qtybtn' onclick='cart.increaseItem(event, " + item.product.id + ", " +  item.product.price + ")'></span>" +
                   "</div>" +
                   "</div>" +
                   "</td>" +
-                  "<td class='cart__price'>" + item.product.price + "</td>" +
-                  "<td class='cart__close'><i class='fa fa-close'></i></td>" +
+                  "<td class='cart__price'>" + item.product.price * item.quantity + "</td>" +
+                  "<td class='cart__close' style='cursor: pointer' onclick='cart.removeItem(event, " + item.product.id + ")'> <i class='fa fa-close'></i></td>" +
                   "</tr>";
         }
         body.innerHTML = HTML
+
+
+          cart.updatePrice(cart.getListItemFromLocalStorage())
+          cart.updateQuantity(cart.getListItemFromLocalStorage())
       });
+
+
+
+      const cart = {
+            getListItemFromLocalStorage () {
+              return JSON.parse(localStorage.getItem("listItem")) || []
+            },
+            saveToLocalStorage (newListItem) {
+              return localStorage.setItem("listItem", JSON.stringify(newListItem));
+            },
+            updatePrice (listItem = []) {
+              let totalAmount
+                if (listItem.length == 0)
+                  totalAmount = 0
+                else {
+                  totalAmount = listItem.reduce((accumulator, item) => {
+                    const productPrice = item.product.price;
+                    const quantity = item.quantity;
+                    const itemTotal = productPrice * quantity;
+                    return accumulator + itemTotal;
+                  }, 0);
+                }
+
+              document.querySelector(".cart__total ul li span").innerHTML =  "$" + totalAmount.toFixed(2);
+              document.querySelector(".cart__total ul li:nth-child(2) span").innerHTML =  "$" +  totalAmount.toFixed(2)
+            },
+            updateQuantity(listItem = []) {
+              const totalQuantity = listItem.reduce((accumulator, currentValue) => {
+                return accumulator + currentValue.quantity;
+              }, 0);
+              document.querySelector(".header__nav__option .number").innerHTML = totalQuantity;
+            },
+            removeItem (e, id) {
+              document.querySelector(".fa.fa-close").parentElement.parentElement.remove();
+              let listItem = this.getListItemFromLocalStorage();
+              listItem = listItem.filter(item => item.product.id !== id)
+              console.log(listItem)
+              this.updatePrice(listItem);
+              this.updateQuantity(listItem);
+              this.saveToLocalStorage((listItem))
+            },
+            increaseItem(e, id, price) {
+              let currentValue =   e.target.parentElement.querySelector("input").value
+              let totalPrice = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".cart__price")
+              e.target.parentElement.querySelector("input").value = parseInt(currentValue) + 1
+
+              totalPrice.innerHTML = (parseInt(currentValue) + 1) * price
+
+
+              let listItem = this.getListItemFromLocalStorage();
+              listItem.reduce((result, item) => {
+                if (item.product.id === id) {
+                  result.push({ ...item, quantity: item.quantity + 1 });
+                } else {
+                  result.push(item);
+                }
+                cart.updatePrice(result)
+                cart.updateQuantity(result)
+                this.saveToLocalStorage(result)
+                return result;
+              }, []);
+
+            },
+            decreaseItem(e, id, price ) {
+              let currentValue =   e.target.parentElement.querySelector("input").value
+              let totalPrice = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".cart__price")
+
+              if (currentValue == 1) return;
+              e.target.parentElement.querySelector("input").value = parseInt(currentValue) - 1
+              totalPrice.innerHTML = (parseInt(currentValue) - 1) * price
+
+
+              let listItem = this.getListItemFromLocalStorage();
+              listItem.reduce((result, item) => {
+                if (item.product.id === id) {
+                  result.push({ ...item, quantity: item.quantity - 1 });
+                } else {
+                  result.push(item);
+                }
+                cart.updatePrice(result)
+                cart.updateQuantity(result)
+                this.saveToLocalStorage(result)
+                return result;
+              }, []);
+
+            }
+      }
     </script>
 <%--    <script>--%>
 <%--      const cart = {--%>
@@ -246,3 +339,25 @@
 <%--    </script>--%>
 </body>
 </html>
+
+
+<%--<tr>--%>
+<%--  <td class="product__cart__item">--%>
+<%--    <div class="product__cart__item__pic">--%>
+<%--      <img src="img/shopping-cart/cart-1.jpg" alt="">--%>
+<%--    </div>--%>
+<%--    <div class="product__cart__item__text">--%>
+<%--      <h6>T-shirt Contrast Pocket</h6>--%>
+<%--      <h5>$98.49</h5>--%>
+<%--    </div>--%>
+<%--  </td>--%>
+<%--  <td class="quantity__item">--%>
+<%--    <div class="quantity">--%>
+<%--      <div class="pro-qty-2">--%>
+<%--        <input type="text" value="1">--%>
+<%--      </div>--%>
+<%--    </div>--%>
+<%--  </td>--%>
+<%--  <td class="cart__price">$ 30.00</td>--%>
+<%--  <td class="cart__close"><i class="fa fa-close"></i></td>--%>
+<%--</tr>--%>

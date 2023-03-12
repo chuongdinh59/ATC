@@ -91,15 +91,15 @@
                 </div>
               </div>
             </div>
-            <div class="checkout__input__checkbox">
-              <label for="acc">
-                Create an account?
-                <input type="checkbox" id="acc">
-                <span class="checkmark"></span>
-              </label>
-              <p>Create an account by entering the information below. If you are a returning customer
-                please login at the top of the page</p>
-            </div>
+<%--            <div class="checkout__input__checkbox">--%>
+<%--              <label for="acc">--%>
+<%--                Create an account?--%>
+<%--                <input type="checkbox" id="acc">--%>
+<%--                <span class="checkmark"></span>--%>
+<%--              </label>--%>
+<%--              <p>Create an account by entering the information below. If you are a returning customer--%>
+<%--                please login at the top of the page</p>--%>
+<%--            </div>--%>
             <div class="checkout__input">
               <p>Account Password<span>*</span></p>
               <input type="text">
@@ -243,7 +243,50 @@
 <!-- Search End -->
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      cart.updateOrder()
+      cart.updatePrice(cart.getListItemFromLocalStorage())
+      cart.updateQuantity(cart.getListItemFromLocalStorage())
+    })
+    const cart = {
+      getListItemFromLocalStorage () {
+        return JSON.parse(localStorage.getItem("listItem")) || []
+      },
+      saveToLocalStorage (newListItem) {
+        return localStorage.setItem("listItem", JSON.stringify(newListItem));
+      },
+      updateOrder() {
+        let listItem = this.getListItemFromLocalStorage();
+        let containerOrder = document.querySelector(".checkout__total__products")
+        let HTML = ''
+        for (let i = 0; i < listItem.length; i++) {
+          HTML += "<li>" + (i + 1) + ". " + listItem[i].product.name + " <span>$ " + listItem[i].product.price + "</span></li>";
+        }
+        containerOrder.innerHTML = HTML;
+      },
+      updatePrice (listItem = []) {
+        let totalAmount
+        if (listItem.length == 0)
+          totalAmount = 0
+        else {
+          totalAmount = listItem.reduce((accumulator, item) => {
+            const productPrice = item.product.price;
+            const quantity = item.quantity;
+            const itemTotal = productPrice * quantity;
+            return accumulator + itemTotal;
+          }, 0);
+        }
 
+        document.querySelector(".checkout__total__all li span").innerHTML =  "$" + totalAmount.toFixed(2);
+        document.querySelector(".checkout__total__all li:nth-child(2) span").innerHTML =  "$" +  totalAmount.toFixed(2)
+      },
+      updateQuantity(listItem = []) {
+        const totalQuantity = listItem.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.quantity;
+        }, 0);
+        document.querySelector(".header__nav__option .number").innerHTML = totalQuantity;
+      },
+    }
 </script>
 </body>
 </html>

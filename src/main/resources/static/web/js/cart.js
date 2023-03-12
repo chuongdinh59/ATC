@@ -1,39 +1,25 @@
 
 const cart = {
-    addToCart(id) {
-        console.log(1)
+    addToCart(id,name, price, thumbnail ) {
         let listItem = JSON.parse(localStorage.getItem("listItem")) || []
-        if (listItem.filter(item => item.id == id).length == 0){
-            listItem.push({id, quantity: 1})
+        const totalQuantity = listItem.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.quantity;
+        }, 0);
+
+        if (listItem.filter(item => item.product.id == id).length == 0){
+            listItem.push({product: {id, name, price, thumbnail} , quantity: 1})
         }
         else
         {
             listItem.forEach(item => {
-                if (item.id == id) {
+                if (item.product.id == id) {
                     item.quantity+=1;
                 }
             })
         }
+        const numberItem = listItem.length
+        const numberDOM = document.querySelector(".header__nav__option .number").innerHTML = totalQuantity + 1;
         localStorage.setItem("listItem", JSON.stringify(listItem));
-    },
-
-    fetchMyCart() {
-        let myCart = JSON.parse(localStorage.getItem("list")) || [];
-        if (myCart.length == 0) return [];
-        fetch("http://localhost:8080/my-cart", {
-            method: "post",
-            body: {
-                cart:JSON.stringify(myCart)
-            },
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-        })
     }
-
 }
 export default cart

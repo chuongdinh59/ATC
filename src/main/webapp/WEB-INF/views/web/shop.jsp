@@ -393,7 +393,7 @@
                         }
                     })
                 }
-                const numberItem = listItem.length
+
                 const numberDOM = document.querySelector(".header__nav__option .number").innerHTML = totalQuantity + 1;
                 localStorage.setItem("listItem", JSON.stringify(listItem));
             }
